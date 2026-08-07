@@ -1,12 +1,12 @@
-# CineSense & CineMatch 🎬
+# CineMatch 🎬
 
-A comprehensive suite for Movie Review Sentiment Analysis (**CineSense**, built with Django 5) and Movie Recommendations (**CineMatch**, built with Flask).
+A comprehensive suite for Movie Review Sentiment Analysis (**CineMatch**, built with Django 5) and Movie Recommendations (**CineMatch**, built with Flask).
 
 ---
 
 ## ✨ Features
 
-### CineSense (Django)
+### CineMatch (Django)
 - Submit and analyze movie reviews using a pre-trained sentiment analysis model (`review/models/`).
 - Sleek Django UI and administration system.
 - Experimentation notebook (`main.ipynb`) and SQLite storage.
@@ -44,7 +44,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Running CineSense (Django Review Analysis)
+### 2. Running CineMatch (Django Review Analysis)
 
 ```bash
 cd Cinesense-main/cinesense
@@ -65,9 +65,9 @@ Open 👉 http://127.0.0.1:5000/
 ## 📂 Project Structure
 
 ```
-CineSense/
-├── Cinesense-main/        # Django CineSense Application
-│   └── cinesense/
+CineMatch/
+├── Cinematch-main/        # Django CineMatch Application
+│   └── Cinematch/
 │       ├── manage.py
 │       ├── review/        # Sentiment Analysis app & models
 │       └── db.sqlite3
