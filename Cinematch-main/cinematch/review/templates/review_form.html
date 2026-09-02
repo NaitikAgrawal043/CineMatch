@@ -8,15 +8,15 @@
     <div class="row justify-content-center">
         <div class="col-lg-7 col-md-9">
 
-            <div class="glass-form-card p-4 p-md-5">
+            <div class="glass-form-card p-4 p-md-5 bg-white border rounded-4 shadow-sm">
                 <div class="text-center mb-4">
-                    <span class="badge px-3 py-2 rounded-pill mb-2" style="background: rgba(255, 237, 40, 0.1); border: 1px solid var(--primary-glow); color: var(--primary-glow);">
-                        <i class="fas fa-pen-nib"></i> Community Critique
+                    <span class="badge-hero-pill mb-2">
+                        <i class="fas fa-pen-nib me-1"></i> Community Critique
                     </span>
-                    <h2 class="fw-bold text-white">
+                    <h2 class="fw-bold text-dark mb-1">
                         {% if form.instance.pk %}Edit Movie Review{% else %}Post a Movie Review{% endif %}
                     </h2>
-                    <p class="text-muted small">Share your cinema perspective with the community</p>
+                    <p class="text-secondary small mb-0">Share your cinema perspective with the community</p>
                 </div>
 
                 <form method="post" enctype="multipart/form-data">
@@ -24,10 +24,12 @@
 
                     {% for field in form %}
                     <div class="mb-4">
-                        <label class="form-label text-warning fw-semibold mb-2">{{ field.label }}</label>
+                        <label class="form-label text-dark fw-bold small mb-2" style="color: #0f172a !important;">
+                            {{ field.label }}
+                        </label>
                         {{ field }}
                         {% if field.help_text %}
-                            <div class="form-text text-muted small">{{ field.help_text }}</div>
+                            <div class="form-text text-muted small mt-1">{{ field.help_text }}</div>
                         {% endif %}
                         {% for error in field.errors %}
                             <div class="text-danger small mt-1"><i class="fas fa-circle-exclamation me-1"></i> {{ error }}</div>
@@ -36,10 +38,10 @@
                     {% endfor %}
 
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn-neon-primary py-2 fs-5">
-                            <i class="fas fa-paper-plane me-1"></i> Submit Review
+                        <button type="submit" class="btn-neon-primary py-3 fs-5 justify-content-center">
+                            <i class="fas fa-paper-plane me-2"></i> Submit Review
                         </button>
-                        <a href="{% url 'review_list' %}" class="btn btn-outline-secondary rounded-pill py-2 mt-2">
+                        <a href="{% url 'review_list' %}" class="btn btn-light border text-secondary rounded-pill py-2 mt-1 fw-medium">
                             <i class="fas fa-xmark me-1"></i> Cancel
                         </a>
                     </div>
@@ -53,28 +55,41 @@
 
 {% block extra_css %}
 <style>
-/* Style Django form inputs automatically */
+/* Clean Light Inputs - No Dark Backgrounds */
 .glass-form-card input[type="text"],
 .glass-form-card input[type="email"],
 .glass-form-card input[type="password"],
 .glass-form-card input[type="file"],
 .glass-form-card textarea,
 .glass-form-card select {
-    background: rgba(8, 12, 22, 0.85) !important;
-    border: 1px solid rgba(255, 237, 40, 0.3) !important;
-    color: #fff !important;
-    border-radius: 10px !important;
-    padding: 0.75rem 1rem !important;
+    background-color: #f8fafc !important;
+    border: 1.5px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1.15rem !important;
     width: 100% !important;
     font-size: 1rem !important;
-    transition: all 0.3s ease !important;
+    font-family: inherit !important;
+    transition: all 0.2s ease !important;
+}
+
+.glass-form-card textarea {
+    min-height: 120px !important;
+    line-height: 1.6 !important;
 }
 
 .glass-form-card input:focus,
-.glass-form-card textarea:focus {
-    border-color: var(--cyan-glow) !important;
-    box-shadow: 0 0 15px rgba(17, 217, 219, 0.35) !important;
+.glass-form-card textarea:focus,
+.glass-form-card select:focus {
+    background-color: #ffffff !important;
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
     outline: none !important;
+}
+
+.glass-form-card input::placeholder,
+.glass-form-card textarea::placeholder {
+    color: #94a3b8 !important;
 }
 </style>
 {% endblock %}
