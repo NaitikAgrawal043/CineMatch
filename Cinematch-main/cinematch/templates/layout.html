@@ -93,23 +93,76 @@
         {% endblock %}
     </main>
 
-    <!-- Unified Footer -->
-    <footer>
-        <div class="container text-center">
-            <div class="row align-items-center gy-3">
-                <div class="col-md-4 text-md-start">
-                    <span class="brand-logo fs-4 text-warning"><i class="fas fa-film"></i> CineMatch</span>
-                    <p class="small text-muted mt-1 mb-0">Cinema Intelligence, Recommendations & NLP Sentiment Analysis Engine.</p>
-                </div>
-                <div class="col-md-4">
-                    <div class="d-flex justify-content-center gap-2 flex-wrap">
-                        <a href="{% url 'recommender' %}" class="badge bg-light border text-dark px-3 py-2 text-decoration-none"><i class="fas fa-microchip text-warning"></i> TF-IDF Vectorizer</a>
-                        <a href="{% url 'sentiment_tool' %}" class="badge bg-light border text-dark px-3 py-2 text-decoration-none"><i class="fas fa-brain text-info"></i> LSTM Sentiment NLP</a>
-                        <span class="badge bg-light border text-dark px-3 py-2"><i class="fas fa-shield-halved text-success"></i> SVG Poster Proxy</span>
+    <!-- Upgraded Modern Footer -->
+    <footer class="site-footer bg-white border-top mt-auto pt-5 pb-4">
+        <div class="container">
+            <div class="row g-4 pb-4 border-bottom">
+                
+                <!-- Brand Info Column -->
+                <div class="col-lg-4 col-md-6">
+                    <a class="brand-logo fs-3 mb-2 d-inline-flex" href="{% url 'home' %}">
+                        <i class="fas fa-film text-warning"></i> CineMatch
+                    </a>
+                    <p class="text-secondary small mb-3 pe-lg-4" style="line-height: 1.6;">
+                        Next-generation cinema intelligence platform combining TF-IDF vector space recommendations with deep sequential LSTM neural review analysis.
+                    </p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge bg-light border text-dark small"><i class="fab fa-python text-primary me-1"></i> Django 6</span>
+                        <span class="badge bg-light border text-dark small"><i class="fas fa-brain text-info me-1"></i> TensorFlow</span>
+                        <span class="badge bg-light border text-dark small"><i class="fas fa-calculator text-warning me-1"></i> Scikit-Learn</span>
                     </div>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <p class="small text-muted mb-0">&copy; 2026 CineMatch. Built for movie enthusiasts.</p>
+
+                <!-- Quick Links Column -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h6 class="fw-bold text-dark mb-3 text-uppercase small" style="letter-spacing: 0.5px;">Navigation</h6>
+                    <ul class="list-unstyled footer-nav-links d-flex flex-column gap-2 small">
+                        <li><a href="{% url 'home' %}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-angle-right me-1 text-muted"></i> Home</a></li>
+                        <li><a href="{% url 'recommender' %}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-angle-right me-1 text-muted"></i> Recommender</a></li>
+                        <li><a href="{% url 'sentiment_tool' %}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-angle-right me-1 text-muted"></i> Sentiment Analyzer</a></li>
+                        <li><a href="{% url 'review_list' %}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-angle-right me-1 text-muted"></i> Community Reviews</a></li>
+                        <li><a href="{% url 'review_create' %}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-angle-right me-1 text-muted"></i> Post a Review</a></li>
+                    </ul>
+                </div>
+
+                <!-- AI Architecture Column -->
+                <div class="col-lg-3 col-md-6 col-6">
+                    <h6 class="fw-bold text-dark mb-3 text-uppercase small" style="letter-spacing: 0.5px;">AI Architecture</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small text-secondary">
+                        <li><i class="fas fa-check-circle text-success me-1"></i> 5,000-D TF-IDF Vector Space</li>
+                        <li><i class="fas fa-check-circle text-success me-1"></i> Snowball Stemming Engine</li>
+                        <li><i class="fas fa-check-circle text-success me-1"></i> Sequential LSTM Model (87.4%)</li>
+                        <li><i class="fas fa-check-circle text-success me-1"></i> 4,806 Films Pairwise Matrix</li>
+                        <li><i class="fas fa-check-circle text-success me-1"></i> Resilient TMDB & SVG Proxy</li>
+                    </ul>
+                </div>
+
+                <!-- Developer Credit Column -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold text-dark mb-3 text-uppercase small" style="letter-spacing: 0.5px;">Developer</h6>
+                    <div class="p-3 bg-light rounded-3 border">
+                        <p class="small text-muted mb-1">Designed & Developed by</p>
+                        <h6 class="fw-bold text-dark mb-2">
+                            <i class="fas fa-code text-primary me-1"></i> Naitik Agrawal
+                        </h6>
+                        <p class="small text-secondary mb-3" style="line-height: 1.4;">
+                            Full-Stack Machine Learning & Software Engineer
+                        </p>
+                        <a href="https://github.com/NaitikAgrawal043/CineMatch" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-dark rounded-pill w-100 fw-semibold">
+                            <i class="fab fa-github me-1"></i> GitHub Repository
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Sub-Footer Bar -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap pt-3 gap-2 small text-secondary">
+                <div>
+                    &copy; 2026 <strong>CineMatch</strong>. All rights reserved.
+                </div>
+                <div>
+                    Made with <i class="fas fa-heart text-danger mx-1"></i> by <a href="https://github.com/NaitikAgrawal043" target="_blank" rel="noopener noreferrer" class="text-dark fw-bold text-decoration-none">Naitik Agrawal</a>
                 </div>
             </div>
         </div>

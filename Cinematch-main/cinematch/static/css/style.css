@@ -421,12 +421,20 @@ body {
 }
 
 /* Footer */
-footer {
+footer.site-footer {
   margin-top: auto;
   border-top: 1px solid var(--border-light);
   background: #ffffff;
-  padding: 2.25rem 0 1.5rem;
-  color: var(--text-muted);
+}
+
+.footer-nav-links a {
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.hover-primary:hover {
+  color: #d97706 !important;
+  transform: translateX(4px);
 }
 
 /* ==========================================================================
