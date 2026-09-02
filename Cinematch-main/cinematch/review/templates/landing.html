@@ -25,7 +25,10 @@
             <a href="{% url 'recommender' %}" class="btn-neon-primary px-4 py-3 fs-5">
                 <i class="fas fa-wand-magic-sparkles me-2"></i> Launch Recommender
             </a>
-            <a href="{% url 'review_list' %}" class="btn-neon-auth px-4 py-3 fs-5">
+            <a href="{% url 'sentiment_tool' %}" class="btn-neon-auth px-4 py-3 fs-5">
+                <i class="fas fa-brain me-2"></i> Sentiment Analyzer
+            </a>
+            <a href="{% url 'review_list' %}" class="btn btn-light border text-secondary px-4 py-3 fs-5 rounded-pill fw-semibold">
                 <i class="fas fa-comments me-2"></i> Community Reviews
             </a>
         </div>
@@ -35,27 +38,27 @@
     <section class="mb-5">
         <div class="row g-3 text-center">
             <div class="col-6 col-md-3">
-                <div class="p-3 bg-white rounded-4 border shadow-sm h-100">
-                    <div class="fs-2 fw-bold text-dark">4,806</div>
-                    <div class="text-muted small">Curated Movies in Matrix</div>
+                <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition-hover">
+                    <div class="fs-1 fw-bold text-dark mb-1">4,806</div>
+                    <div class="text-muted small fw-medium">Curated Movies in Matrix</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="p-3 bg-white rounded-4 border shadow-sm h-100">
-                    <div class="fs-2 fw-bold text-warning">5,000</div>
-                    <div class="text-muted small">TF-IDF Feature Dimensions</div>
+                <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition-hover">
+                    <div class="fs-1 fw-bold text-warning mb-1">5,000</div>
+                    <div class="text-muted small fw-medium">TF-IDF Feature Dimensions</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="p-3 bg-white rounded-4 border shadow-sm h-100">
-                    <div class="fs-2 fw-bold text-success">87.43%</div>
-                    <div class="text-muted small">LSTM Sentiment Precision</div>
+                <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition-hover">
+                    <div class="fs-1 fw-bold text-success mb-1">87.43%</div>
+                    <div class="text-muted small fw-medium">LSTM Sentiment Precision</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="p-3 bg-white rounded-4 border shadow-sm h-100">
-                    <div class="fs-2 fw-bold text-info">&lt; 3 ms</div>
-                    <div class="text-muted small">Vector Query Latency</div>
+                <div class="p-4 bg-white rounded-4 border shadow-sm h-100 transition-hover">
+                    <div class="fs-1 fw-bold text-info mb-1">&lt; 3 ms</div>
+                    <div class="text-muted small fw-medium">Vector Query Latency</div>
                 </div>
             </div>
         </div>
@@ -93,80 +96,119 @@
         </div>
     </section>
 
-    <!-- 3-Step Architecture Bento Grid -->
-    <section class="my-5 pt-3">
-        <div class="text-center mb-4">
-            <h3 class="fw-bold text-dark mb-1">How CineMatch Works</h3>
-            <p class="text-muted small">A three-stage machine learning and natural language pipeline</p>
+    <!-- Upgraded 3-Step Architecture Bento Grid -->
+    <section class="my-5 pt-4">
+        <div class="text-center mb-5">
+            <span class="badge bg-warning-subtle text-dark border border-warning px-3 py-1 rounded-pill mb-2 fw-semibold">
+                Architecture & Deep Learning
+            </span>
+            <h2 class="fw-bold text-dark mb-1">How CineMatch Works</h2>
+            <p class="text-muted small max-w-lg mx-auto">An end-to-end natural language processing and deep learning pipeline</p>
         </div>
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="bento-card-light bento-gold">
-                    <div class="bento-icon-badge badge-gold">
-                        <i class="fas fa-network-wired"></i>
+                <div class="bento-card-light bento-gold h-100 p-4 d-flex flex-column justify-content-between position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                        <span class="fs-1 fw-bold text-warning font-monospace">01</span>
                     </div>
-                    <h5 class="text-dark fw-bold mb-2">1. Vector Space Engine</h5>
-                    <p class="text-secondary small mb-0" style="line-height: 1.6;">
-                        Merges metadata (cast, director, genres, keywords, plot) and uses Snowball stemming with TF-IDF to create 5,000-dimensional semantic vectors.
-                    </p>
+                    <div>
+                        <div class="bento-icon-badge badge-gold mb-3">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h5 class="text-dark fw-bold mb-2">1. Vector Space Engine</h5>
+                        <p class="text-secondary small mb-3" style="line-height: 1.6;">
+                            Extracts 5,000 weighted features using Snowball stemming and token collapsing across cast, directors, genres, keywords, and plot summaries.
+                        </p>
+                    </div>
+                    <div class="pt-3 border-top border-warning border-opacity-25 d-flex align-items-center gap-2 text-warning small fw-semibold">
+                        <i class="fas fa-check-circle"></i> Cosine Similarity Ranking
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="bento-card-light bento-cyan">
-                    <div class="bento-icon-badge badge-cyan">
-                        <i class="fas fa-brain"></i>
+                <div class="bento-card-light bento-cyan h-100 p-4 d-flex flex-column justify-content-between position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                        <span class="fs-1 fw-bold text-info font-monospace">02</span>
                     </div>
-                    <h5 class="text-dark fw-bold mb-2">2. LSTM Sentiment Model</h5>
-                    <p class="text-secondary small mb-0" style="line-height: 1.6;">
-                        Trained on 50,000 IMDB movie reviews to classify community critiques as Positive or Negative with 87.43% test accuracy.
-                    </p>
+                    <div>
+                        <div class="bento-icon-badge badge-cyan mb-3">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h5 class="text-dark fw-bold mb-2">2. LSTM Sentiment Model</h5>
+                        <p class="text-secondary small mb-3" style="line-height: 1.6;">
+                            Sequential LSTM recurrent neural network trained on 50,000 IMDB movie reviews with token padding to classify user sentiments with 87.43% precision.
+                        </p>
+                    </div>
+                    <div class="pt-3 border-top border-info border-opacity-25 d-flex align-items-center gap-2 text-info small fw-semibold">
+                        <i class="fas fa-bolt"></i> Real-time Polarity Inference
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="bento-card-light bento-green">
-                    <div class="bento-icon-badge badge-green">
-                        <i class="fas fa-image"></i>
+                <div class="bento-card-light bento-green h-100 p-4 d-flex flex-column justify-content-between position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                        <span class="fs-1 fw-bold text-success font-monospace">03</span>
                     </div>
-                    <h5 class="text-dark fw-bold mb-2">3. Resilient SVG Proxy</h5>
-                    <p class="text-secondary small mb-0" style="line-height: 1.6;">
-                        In-memory cached server-side proxy that overcomes third-party CDN blocks and dynamically generates stylized cinema SVG posters when needed.
-                    </p>
+                    <div>
+                        <div class="bento-icon-badge badge-green mb-3">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h5 class="text-dark fw-bold mb-2">3. Resilient SVG Proxy</h5>
+                        <p class="text-secondary small mb-3" style="line-height: 1.6;">
+                            High-speed server-side caching proxy that prevents CDN blocks and dynamically renders custom cinema SVG posters whenever external CDNs fail.
+                        </p>
+                    </div>
+                    <div class="pt-3 border-top border-success border-opacity-25 d-flex align-items-center gap-2 text-success small fw-semibold">
+                        <i class="fas fa-shield-halved"></i> Zero Broken Artwork
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Recent Community Reviews Preview -->
+    <!-- Upgraded Recent Community Critiques Section -->
     {% if recent_reviews %}
-    <section class="my-5 pt-3">
+    <section class="my-5 pt-4">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
-                <h3 class="fw-bold text-dark mb-0"><i class="fas fa-comments text-info me-2"></i> Recent Community Critiques</h3>
-                <p class="text-muted small mb-0">What other movie lovers are saying right now</p>
+                <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-1 rounded-pill mb-1 fw-semibold">
+                    Live Feed
+                </span>
+                <h3 class="fw-bold text-dark mb-0">
+                    <i class="fas fa-comments text-info me-2"></i> Recent Community Critiques
+                </h3>
+                <p class="text-muted small mb-0">What cinema lovers and critics are sharing right now</p>
             </div>
             <a href="{% url 'review_list' %}" class="btn-neon-auth btn-sm">
                 View All Reviews <i class="fas fa-arrow-right ms-1"></i>
             </a>
         </div>
 
-        <div class="row g-3">
+        <div class="row g-4">
             {% for rev in recent_reviews %}
             <div class="col-md-6 col-lg-3">
-                <div class="glass-form-card p-3 h-100 d-flex flex-column justify-content-between">
+                <div class="review-critique-card h-100 p-4 bg-white border rounded-4 shadow-sm d-flex flex-column justify-content-between">
                     <div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-warning text-dark fw-bold">{{ rev.movie_name }}</span>
-                            <span class="text-secondary small fw-medium">@{{ rev.user.username }}</span>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge-movie-pill text-truncate" title="{{ rev.movie_name }}">
+                                <i class="fas fa-film text-warning me-1"></i> {{ rev.movie_name }}
+                            </span>
+                            <span class="badge-author-pill">
+                                @{{ rev.user.username }}
+                            </span>
                         </div>
-                        <p class="text-dark small mb-3 fw-normal" style="line-height: 1.5; color: #1e293b !important;">"{{ rev.text }}"</p>
+                        <div class="quote-text-wrapper mb-3">
+                            <i class="fas fa-quote-left text-muted opacity-25 me-1"></i>
+                            <p class="review-quote-body d-inline">
+                                {{ rev.text }}
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'review_analyse' rev.id %}" class="btn btn-sm btn-outline-primary w-100 rounded-pill fw-semibold">
-                            <i class="fas fa-brain me-1"></i> Analyze Sentiment
+                    <div class="pt-3 border-top">
+                        <a href="{% url 'review_analyse' rev.id %}" class="btn-analyze-pill w-100">
+                            <i class="fas fa-brain me-1 text-primary"></i> Analyze Sentiment
                         </a>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -175,13 +217,22 @@
     </section>
     {% endif %}
 
-    <!-- Bottom CTA Banner -->
-    <section class="my-5 p-5 text-center bg-white border rounded-4 shadow-sm">
-        <h2 class="fw-bold text-dark mb-2">Ready to find your next favorite movie?</h2>
-        <p class="text-muted mb-4">Enter any film title to start your AI-powered cinema discovery journey.</p>
-        <a href="{% url 'recommender' %}" class="btn-neon-primary px-5 py-3 fs-5">
-            <i class="fas fa-wand-magic-sparkles me-2"></i> Try CineMatch Recommender Now
-        </a>
+    <!-- Upgraded Bottom CTA Banner -->
+    <section class="my-5 p-5 text-center cta-banner-gradient rounded-4 border shadow-sm">
+        <div class="max-w-2xl mx-auto">
+            <span class="badge-hero-pill mb-3">
+                <i class="fas fa-compass me-1"></i> Instant Cinema Matching
+            </span>
+            <h2 class="hero-title fs-1 mb-2">
+                Ready to Find Your Next <span class="gradient-text">Favorite Movie</span>?
+            </h2>
+            <p class="hero-subtitle mb-4 fs-5" style="max-width: 600px;">
+                Type any movie title to compute mathematical cosine similarities across our 4,806 film database in milliseconds.
+            </p>
+            <a href="{% url 'recommender' %}" class="btn-neon-primary px-5 py-3 fs-5 shadow-lg">
+                <i class="fas fa-wand-magic-sparkles me-2"></i> Launch Recommender Now &rarr;
+            </a>
+        </div>
     </section>
 
 </div>
