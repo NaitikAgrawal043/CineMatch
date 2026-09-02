@@ -22,24 +22,21 @@
 </head>
 <body>
 
-    <!-- Unified Navbar -->
+    <!-- Clean Modern Navbar -->
     <nav class="navbar navbar-expand-lg navbar-cinematch">
         <div class="container px-lg-4">
-            <a class="brand-logo" href="{% url 'home' %}">
+            <!-- Brand Logo (Routes to Home) -->
+            <a class="brand-logo me-4" href="{% url 'home' %}" title="CineMatch Home">
                 <i class="fas fa-film text-warning"></i> CineMatch
             </a>
             
-            <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars text-dark fs-4"></i>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-1">
-                    <li class="nav-item">
-                        <a class="nav-link-custom {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
-                            <i class="fas fa-house text-primary"></i> Home
-                        </a>
-                    </li>
+                <!-- Navigation Items -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
                     <li class="nav-item">
                         <a class="nav-link-custom {% if request.resolver_match.url_name == 'recommender' %}active{% endif %}" href="{% url 'recommender' %}">
                             <i class="fas fa-wand-magic-sparkles text-warning"></i> Recommender
@@ -52,7 +49,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link-custom {% if request.resolver_match.url_name == 'review_list' %}active{% endif %}" href="{% url 'review_list' %}">
-                            <i class="fas fa-comments text-success"></i> Reviews
+                            <i class="fas fa-comments text-success"></i> Community Reviews
                         </a>
                     </li>
                     <li class="nav-item">
@@ -70,8 +67,8 @@
                         </span>
                         <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1">
-                                <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                            <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-medium">
+                                <i class="fas fa-arrow-right-from-bracket me-1"></i> Logout
                             </button>
                         </form>
                     {% else %}
