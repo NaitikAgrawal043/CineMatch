@@ -1,102 +1,79 @@
 {% extends "layout.html" %}
+{% load static %}
 
+{% block title %}CineMatch | Member Sign In{% endblock %}
 
 {% block content %}
-<form class="mt-5 neon-form" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% for field in form %}
-        <label class="neon-label">{{ field.label }}</label>
-        {{ field }}
-    {% endfor %}
-    <button class="btn neon-btn-warning" type="submit">Login</button>
-</form>
-<p class=" mr-4 neon-label">Don't have an account? Please <a  class="btn neon-btn-warning" href="{% url 'register'%}">Register</a> </p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
 
+            <div class="glass-form-card p-4 p-md-5 bg-white border rounded-4 shadow-sm">
+                <div class="text-center mb-4">
+                    <span class="brand-logo fs-2 text-warning d-block mb-1">
+                        <i class="fas fa-film"></i> CineMatch
+                    </span>
+                    <h3 class="fw-bold text-dark mb-1">Welcome Back</h3>
+                    <p class="text-secondary small">Sign in to write reviews & participate in the community</p>
+                </div>
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger rounded-3 py-2 px-3 small mb-3">
+                    {% for error in form.non_field_errors %}
+                        <div><i class="fas fa-circle-exclamation me-1"></i> {{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label text-dark fw-semibold small mb-1">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-circle-exclamation me-1"></i> {{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn-neon-primary py-2 fs-5 justify-content-center">
+                            <i class="fas fa-right-to-bracket me-1"></i> Sign In
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top">
+                    <p class="text-secondary small mb-0">
+                        Don't have an account? <a href="{% url 'register' %}" class="text-primary fw-bold text-decoration-none">Create a free account</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
 <style>
-    body {
-        background-color: #FFD700; /* Golden-yellow background */
-        overflow-y: auto;
-    }
-
-    .neon-heading {
-        color: #FF4500; /* Neon orange */
-        text-align: center;
-        text-shadow: 0 0 5px #FF4500, 0 0 10px #FF4500;
-        margin-bottom: 20px;
-    }
-    .neon-form { 
-        background-color: rgba(255, 255, 255, 0.1); /* Light transparent background */
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #00FF00; /* Neon green border */
-        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5);
-        margin: 0 auto;
-        width: 50%;
-    }
-
-    .neon-form input, .neon-form textarea, .neon-form select {
-        background-color: transparent; /* Transparent background */
-        border: 2px solid #00FF00; /* Neon green border */
-        color: #00FF00; /* Neon green text */
-        padding: 10px;
-        border-radius: 5px;
-        width: 100%;
-        margin-bottom: 15px;
-        box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-        outline: none;
-        font-size: 16px;
-        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-        transition: all 0.3s ease;
-    }
-    .neon-label {
-        color: #00FF00; /* Neon green color for labels */
-        font-size: 18px; /* Font size for labels */
-        font-weight: bold; /* Make labels bold */
-        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5), 0 0 10px rgba(0, 255, 0, 1); /* Neon effect */
-        margin-bottom: 5px; /* Space between label and field */
-    }
-
-    .neon-form input:focus, .neon-form textarea:focus, .neon-form select:focus {
-        box-shadow: 0 0 15px rgba(0, 255, 0, 1);
-    }
-
-    /* Button Styles */
-    .neon-btn-warning {
-        background-color: transparent; /* Transparent background */
-        border: 2px solid #FF4500; /* Neon orange border */
-        color: #FF4500; /* Neon orange text */
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-transform: uppercase;
-        font-weight: bold;
-        text-shadow: 0 0 5px #FF4500, 0 0 10px #FF4500;
-        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    }
-
-    .neon-btn-warning:hover {
-        background-color: #FF4500; /* Neon orange background on hover */
-        color: #000; /* Black text on hover */
-        box-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500;
-    }
-
-    .neon-btn-back {
-        background-color: transparent; /* Transparent background */
-        border: 2px solid #00FF00; /* Neon green border */
-        color: #00FF00; /* Neon green text */
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-transform: uppercase;
-        font-weight: bold;
-        text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00;
-        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-        display: inline-block;
-        margin-top: 10px;
-    }
-
-    .neon-btn-back:hover {
-        background-color: #00FF00; /* Neon green background on hover */
-        color: #000; /* Black text on hover */
-        box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
-    }
+.glass-form-card input {
+    background: #f8fafc !important;
+    border: 1.5px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    border-radius: 10px !important;
+    padding: 0.75rem 1rem !important;
+    width: 100% !important;
+    font-size: 1rem !important;
+    transition: all 0.2s ease !important;
+}
+.glass-form-card input:focus {
+    background: #ffffff !important;
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
+    outline: none !important;
+}
 </style>
 {% endblock %}

@@ -1,0 +1,165 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}CineMatch | AI Movie Recommender Engine{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Recommender Workspace Header -->
+    <section class="hero-section pb-2 pt-4">
+        <div class="badge-hero-pill">
+            <i class="fas fa-wand-magic-sparkles me-1"></i> Content-Based Vector Recommender
+        </div>
+        
+        <h1 class="hero-title">
+            Discover Your Next <span class="gradient-text">Favorite Film</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+            Enter any movie you love, and our TF-IDF Vector Space Engine will instantly calculate cosine similarities to retrieve the top 5 closest cinematic matches.
+        </p>
+
+        <!-- Search Box Container -->
+        <div class="search-container">
+            <form method="GET" action="{% url 'recommender' %}" id="search-form" onsubmit="handleFormSubmit(event)">
+                <div class="search-bar-wrapper">
+                    <i class="fas fa-magnifying-glass fs-5 text-warning my-auto ms-3 me-2"></i>
+                    <input list="movie-datalist" id="movie-input" name="query" class="search-input" 
+                           placeholder="Type a movie title (e.g., Inception, The Dark Knight, Avatar)..." 
+                           value="{{ query }}" autocomplete="off" required>
+                    <datalist id="movie-datalist">
+                        {% for title in movie_list %}
+                            <option value="{{ title }}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <button type="submit" class="search-btn" id="recommend-btn">
+                        <i class="fas fa-wand-magic-sparkles"></i> Recommend
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Suggestion Chips -->
+            <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap mt-3">
+                <span class="text-muted small me-1">Popular searches:</span>
+                <button class="chip-btn-light" onclick="quickSearch('The Dark Knight')">🦇 The Dark Knight</button>
+                <button class="chip-btn-light" onclick="quickSearch('Avatar')">🌌 Avatar</button>
+                <button class="chip-btn-light" onclick="quickSearch('Interstellar')">🚀 Interstellar</button>
+                <button class="chip-btn-light" onclick="quickSearch('Inception')">🌀 Inception</button>
+                <button class="chip-btn-light" onclick="quickSearch('The Avengers')">⚡ The Avengers</button>
+                <button class="chip-btn-light" onclick="quickSearch('Pulp Fiction')">🎬 Pulp Fiction</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Spinner Indicator -->
+    <div id="loading-spinner" class="text-center my-5 d-none">
+        <div class="spinner-border text-warning" style="width: 3.5rem; height: 3.5rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="text-secondary mt-3 fs-5 fw-semibold font-monospace">Calculating Vector Distances & Fetching Posters...</p>
+    </div>
+
+    <!-- Recommendations Result Section -->
+    <div id="results-container">
+        {% if recommendations %}
+        <div class="mt-4 mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <span class="badge bg-warning-subtle text-dark border border-warning px-3 py-1 rounded-pill mb-1">
+                        <i class="fas fa-check-circle me-1"></i> 5 Recommendations Computed
+                    </span>
+                    <h3 class="fw-bold text-dark mb-0">
+                        Top Matches for <span class="text-warning">"{{ selected_movie }}"</span>
+                    </h3>
+                    <p class="text-muted small mb-0">Ranked by TF-IDF metadata cosine similarity</p>
+                </div>
+                <a href="{% url 'review_create' %}?movie_name={{ selected_movie|urlencode }}" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-2 fw-semibold">
+                    <i class="fas fa-pen-nib me-1"></i> Review "{{ selected_movie }}"
+                </a>
+            </div>
+
+            <div class="movie-grid">
+                {% for movie in recommendations %}
+                <div class="movie-card">
+                    <div class="poster-wrapper">
+                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="poster-img" loading="lazy"
+                             onerror="this.onerror=null; this.src='/review/poster-proxy/?title={{ movie.title|urlencode }}&movie_id={{ movie.movie_id }}'">
+                        <div class="match-badge">
+                            <i class="fas fa-fire-flame-curved"></i> {{ movie.match_percentage }}% Match
+                        </div>
+                    </div>
+                    <div class="movie-card-body">
+                        <div>
+                            <h5 class="movie-card-title">{{ movie.title }}</h5>
+                            <span class="badge bg-light border text-secondary small mb-2">Movie ID: #{{ movie.movie_id }}</span>
+                        </div>
+                        <div class="d-flex flex-column gap-2 mt-3">
+                            <a href="{% url 'review_create' %}?movie_name={{ movie.title|urlencode }}" class="btn-review-action">
+                                <i class="fas fa-pen-to-square me-1"></i> Write Review
+                            </a>
+                            <a href="{% url 'recommender' %}?query={{ movie.title|urlencode }}" class="btn btn-sm btn-light border text-secondary rounded-3 py-1">
+                                <i class="fas fa-compass me-1"></i> Find Similar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif query %}
+        <div class="text-center my-5 p-5 glass-form-card">
+            <i class="fas fa-film text-warning fs-1 mb-3"></i>
+            <h3 class="text-dark fw-bold">No exact match found for "{{ query }}"</h3>
+            <p class="text-muted">Try selecting one of the suggested titles from the autocomplete dropdown list.</p>
+        </div>
+        {% elif starter_movies %}
+        <!-- Quick Starter Exploration Grid -->
+        <div class="mt-5 mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <div>
+                    <h4 class="fw-bold text-dark mb-0"><i class="fas fa-compass text-warning me-2"></i> Quick Starter Titles</h4>
+                    <p class="text-muted small mb-0">Select any film below to instantly generate recommendations</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                {% for movie in starter_movies %}
+                <div class="col-6 col-md-4 col-lg">
+                    <div class="movie-card h-100">
+                        <div class="poster-wrapper">
+                            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="poster-img" loading="lazy"
+                                 onerror="this.onerror=null; this.src='/review/poster-proxy/?title={{ movie.title|urlencode }}&movie_id={{ movie.movie_id }}'">
+                        </div>
+                        <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
+                            <h6 class="fw-bold text-dark text-truncate mb-2" title="{{ movie.title }}">{{ movie.title }}</h6>
+                            <a href="{% url 'recommender' %}?query={{ movie.title|urlencode }}" class="btn btn-sm btn-outline-warning w-100 rounded-pill fw-semibold">
+                                Recommend &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function quickSearch(title) {
+    document.getElementById('movie-input').value = title;
+    document.getElementById('loading-spinner').classList.remove('d-none');
+    document.getElementById('results-container').classList.add('opacity-50');
+    document.getElementById('search-form').submit();
+}
+
+function handleFormSubmit(e) {
+    document.getElementById('loading-spinner').classList.remove('d-none');
+    document.getElementById('results-container').classList.add('opacity-50');
+}
+</script>
+{% endblock %}

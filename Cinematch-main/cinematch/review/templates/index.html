@@ -1,8 +1,214 @@
 {% extends "layout.html" %}
-{% block title %}
-Movie review
-{% endblock %}
+{% load static %}
+
+{% block title %}CineMatch | Movie Recommender & Sentiment Analysis{% endblock %}
 
 {% block content %}
-<h1 class="text-center text-white mt-4">Welcome to CineSense</h1>
+<div class="container py-4">
+
+    <!-- Hero Recommender Section -->
+    <section class="hero-section">
+        <div class="badge-hero-pill">
+            <i class="fas fa-sparkles me-1"></i> AI-Powered Movie Recommendation & Review Engine
+        </div>
+        
+        <h1 class="hero-title">
+            Discover Your Next <span class="gradient-text">Favorite Film</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+            Enter any movie you love, and our TF-IDF Vector Space Engine will instantly find the top 5 semantically similar cinematic masterpieces.
+        </p>
+
+        <!-- Search Box Container -->
+        <div class="search-container">
+            <form method="GET" action="{% url 'home' %}" id="search-form" onsubmit="handleFormSubmit(event)">
+                <div class="search-bar-wrapper">
+                    <i class="fas fa-magnifying-glass fs-5 text-warning my-auto ms-3 me-2"></i>
+                    <input list="movie-datalist" id="movie-input" name="query" class="search-input" 
+                           placeholder="Type a movie title (e.g., Inception, The Dark Knight, Avatar)..." 
+                           value="{{ query }}" autocomplete="off" required>
+                    <datalist id="movie-datalist">
+                        {% for title in movie_list %}
+                            <option value="{{ title }}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <button type="submit" class="search-btn" id="recommend-btn">
+                        <i class="fas fa-wand-magic-sparkles"></i> Recommend
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Suggestion Chips -->
+            <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap mt-3">
+                <span class="text-muted small me-1">Try:</span>
+                <button class="chip-btn-light" onclick="quickSearch('The Dark Knight')">The Dark Knight</button>
+                <button class="chip-btn-light" onclick="quickSearch('Avatar')">Avatar</button>
+                <button class="chip-btn-light" onclick="quickSearch('Interstellar')">Interstellar</button>
+                <button class="chip-btn-light" onclick="quickSearch('Inception')">Inception</button>
+                <button class="chip-btn-light" onclick="quickSearch('The Avengers')">The Avengers</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Spinner Indicator -->
+    <div id="loading-spinner" class="text-center my-5 d-none">
+        <div class="spinner-border text-warning" style="width: 3.5rem; height: 3.5rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="text-secondary mt-3 fs-5 fw-semibold font-monospace">Calculating Vector Distances & Fetching Posters...</p>
+    </div>
+
+    <!-- Recommendations Result Section -->
+    <div id="results-container">
+        {% if recommendations %}
+        <div class="mt-4 mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h3 class="fw-bold text-dark mb-0">
+                        <i class="fas fa-clapperboard text-warning me-2"></i> Top Matches for <span class="text-warning">"{{ selected_movie }}"</span>
+                    </h3>
+                    <p class="text-muted small mb-0">Ranked by TF-IDF metadata cosine similarity</p>
+                </div>
+                <a href="{% url 'review_create' %}?movie_name={{ selected_movie|urlencode }}" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-2 fw-semibold">
+                    <i class="fas fa-pen-nib me-1"></i> Review "{{ selected_movie }}"
+                </a>
+            </div>
+
+            <div class="movie-grid">
+                {% for movie in recommendations %}
+                <div class="movie-card">
+                    <div class="poster-wrapper">
+                        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="poster-img" loading="lazy"
+                             onerror="this.src='/review/poster-proxy/?title={{ movie.title|urlencode }}&movie_id={{ movie.movie_id }}'">
+                        <div class="match-badge">
+                            <i class="fas fa-fire-flame-curved"></i> {{ movie.match_percentage }}% Match
+                        </div>
+                    </div>
+                    <div class="movie-card-body">
+                        <div>
+                            <h5 class="movie-card-title">{{ movie.title }}</h5>
+                            <span class="badge bg-light border text-secondary small mb-2">Movie ID: {{ movie.movie_id }}</span>
+                        </div>
+                        <div class="d-flex flex-column gap-2 mt-3">
+                            <a href="{% url 'review_create' %}?movie_name={{ movie.title|urlencode }}" class="btn-review-action">
+                                <i class="fas fa-pen-to-square me-1"></i> Write Review
+                            </a>
+                            <a href="{% url 'home' %}?query={{ movie.title|urlencode }}" class="btn btn-sm btn-light border text-secondary rounded-3 py-1">
+                                <i class="fas fa-compass me-1"></i> Find Similar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif query %}
+        <div class="text-center my-5 p-5 glass-form-card">
+            <i class="fas fa-film text-warning fs-1 mb-3"></i>
+            <h3 class="text-dark fw-bold">No exact match found for "{{ query }}"</h3>
+            <p class="text-muted">Try selecting one of the suggested titles from the autocomplete dropdown.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Bento Grid Platform Features -->
+    <section class="my-5 pt-3">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-dark mb-1">Engineering & Cinema Intelligence Stack</h3>
+            <p class="text-muted small">How CineMatch analyzes films and user reviews</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="bento-card-light bento-gold">
+                    <div class="bento-icon-badge badge-gold">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h5 class="text-dark fw-bold mb-2">TF-IDF Vector Recommender</h5>
+                    <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                        Weights 5,000 multi-attribute tokens across 4,800+ films (genres, cast, director, keywords, plot) using Snowball stemming and calculates high-precision pairwise cosine similarity in under 3ms.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bento-card-light bento-cyan">
+                    <div class="bento-icon-badge badge-cyan">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h5 class="text-dark fw-bold mb-2">LSTM Sentiment Analysis</h5>
+                    <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                        Deep Learning sequential LSTM neural network trained on 50,000 IMDB movie reviews achieving 87.43% test accuracy to classify community reviews as Positive or Negative polarity.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bento-card-light bento-green">
+                    <div class="bento-icon-badge badge-green">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h5 class="text-dark fw-bold mb-2">Resilient SVG Poster Proxy</h5>
+                    <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                        Server-side proxy with in-memory caching that overcomes third-party CDN blocks and dynamically renders custom cinema SVG posters when TMDB artwork is unavailable.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Community Reviews Preview -->
+    {% if recent_reviews %}
+    <section class="my-5 pt-3">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h3 class="fw-bold text-dark mb-0"><i class="fas fa-comments text-info me-2"></i> Recent Community Reviews</h3>
+                <p class="text-muted small mb-0">Latest thoughts from film critics & fans</p>
+            </div>
+            <a href="{% url 'review_list' %}" class="btn-neon-auth btn-sm">
+                View All Reviews <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-3">
+            {% for rev in recent_reviews %}
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-form-card p-3 h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-warning text-dark fw-bold">{{ rev.movie_name }}</span>
+                            <span class="text-muted small">@{{ rev.user.username }}</span>
+                        </div>
+                        <p class="text-secondary small mb-3" style="line-height: 1.5;">"{{ rev.text }}"</p>
+                    </div>
+                    <div>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'review_analyse' rev.id %}" class="btn btn-sm btn-outline-info w-100 rounded-pill">
+                            <i class="fas fa-wand-magic me-1"></i> Analyze Sentiment
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function quickSearch(title) {
+    document.getElementById('movie-input').value = title;
+    document.getElementById('loading-spinner').classList.remove('d-none');
+    document.getElementById('results-container').classList.add('opacity-50');
+    document.getElementById('search-form').submit();
+}
+
+function handleFormSubmit(e) {
+    document.getElementById('loading-spinner').classList.remove('d-none');
+    document.getElementById('results-container').classList.add('opacity-50');
+}
+</script>
 {% endblock %}

@@ -1,10 +1,16 @@
 from django.urls import path
 from . import views
+
 urlpatterns = [
-    path('', views.review_list, name='review_list'),
+    path('', views.landing, name='home'),
+    path('recommend/', views.recommend_view, name='recommender'),
+    path('recommend-api/', views.recommend_api, name='recommend_api'),
+    path('sentiment/', views.sentiment_analyzer_view, name='sentiment_tool'),
+    path('poster-proxy/', views.poster_proxy, name='poster_proxy'),
+    path('reviews/', views.review_list, name='review_list'),
     path('create/', views.review_create, name='review_create'),
     path('<int:review_id>/edit/', views.review_edit, name='review_edit'),
     path('<int:review_id>/analyze/', views.review_analyse, name='review_analyse'),
     path('<int:review_id>/delete/', views.review_delete, name='review_delete'),
     path('register/', views.register, name='register'),
-] 
+]

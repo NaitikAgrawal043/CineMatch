@@ -1,108 +1,80 @@
 {% extends "layout.html" %}
-{% block title %}
-Movie Review
-{% endblock %}
+{% load static %}
+
+{% block title %}CineMatch | {% if form.instance.pk %}Edit Review{% else %}Post Review{% endif %}{% endblock %}
 
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
 
-<h2 class="neon-heading">{% if form.instance.pk %} Edit Review {% else %} Create Review {% endif %}</h2>
+            <div class="glass-form-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="badge px-3 py-2 rounded-pill mb-2" style="background: rgba(255, 237, 40, 0.1); border: 1px solid var(--primary-glow); color: var(--primary-glow);">
+                        <i class="fas fa-pen-nib"></i> Community Critique
+                    </span>
+                    <h2 class="fw-bold text-white">
+                        {% if form.instance.pk %}Edit Movie Review{% else %}Post a Movie Review{% endif %}
+                    </h2>
+                    <p class="text-muted small">Share your cinema perspective with the community</p>
+                </div>
 
-    <form class="neon-form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            <label class="neon-label">{{ field.label }}</label>
-            {{ field }}
-        {% endfor %}
-        <button class="btn neon-btn-warning" type="submit">Submit</button>
-    </form>
-    
-    <a class="btn neon-btn-back" href="{% url 'review_list' %}">BACK TO HOME</a>
-    
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-4">
+                        <label class="form-label text-warning fw-semibold mb-2">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text text-muted small">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="text-danger small mt-1"><i class="fas fa-circle-exclamation me-1"></i> {{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn-neon-primary py-2 fs-5">
+                            <i class="fas fa-paper-plane me-1"></i> Submit Review
+                        </button>
+                        <a href="{% url 'review_list' %}" class="btn btn-outline-secondary rounded-pill py-2 mt-2">
+                            <i class="fas fa-xmark me-1"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
 <style>
-    body {
-        background-color: #FFD700; /* Golden-yellow background */
-        overflow-y: auto;
-    }
+/* Style Django form inputs automatically */
+.glass-form-card input[type="text"],
+.glass-form-card input[type="email"],
+.glass-form-card input[type="password"],
+.glass-form-card input[type="file"],
+.glass-form-card textarea,
+.glass-form-card select {
+    background: rgba(8, 12, 22, 0.85) !important;
+    border: 1px solid rgba(255, 237, 40, 0.3) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    padding: 0.75rem 1rem !important;
+    width: 100% !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+}
 
-    .neon-heading {
-        color: #FF4500; /* Neon orange */
-        text-align: center;
-        text-shadow: 0 0 5px #FF4500, 0 0 10px #FF4500;
-        margin-bottom: 20px;
-    }
-    .neon-form { 
-        background-color: rgba(255, 255, 255, 0.1); /* Light transparent background */
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #00FF00; /* Neon green border */
-        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.5);
-        margin: 0 auto;
-        width: 50%;
-    }
-
-    .neon-form input, .neon-form textarea, .neon-form select {
-        background-color: transparent; /* Transparent background */
-        border: 2px solid #00FF00; /* Neon green border */
-        color: #00FF00; /* Neon green text */
-        padding: 10px;
-        border-radius: 5px;
-        width: 100%;
-        margin-bottom: 15px;
-        box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-        outline: none;
-        font-size: 16px;
-        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-        transition: all 0.3s ease;
-    }
-    .neon-label {
-        color: #00FF00; /* Neon green color for labels */
-        font-size: 18px; /* Font size for labels */
-        font-weight: bold; /* Make labels bold */
-        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5), 0 0 10px rgba(0, 255, 0, 1); /* Neon effect */
-        margin-bottom: 5px; /* Space between label and field */
-    }
-
-    .neon-form input:focus, .neon-form textarea:focus, .neon-form select:focus {
-        box-shadow: 0 0 15px rgba(0, 255, 0, 1);
-    }
-
-    /* Button Styles */
-    .neon-btn-warning {
-        background-color: transparent; /* Transparent background */
-        border: 2px solid #FF4500; /* Neon orange border */
-        color: #FF4500; /* Neon orange text */
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-transform: uppercase;
-        font-weight: bold;
-        text-shadow: 0 0 5px #FF4500, 0 0 10px #FF4500;
-        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    }
-
-    .neon-btn-warning:hover {
-        background-color: #FF4500; /* Neon orange background on hover */
-        color: #000; /* Black text on hover */
-        box-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500;
-    }
-
-    .neon-btn-back {
-        background-color: transparent; /* Transparent background */
-        border: 2px solid #00FF00; /* Neon green border */
-        color: #00FF00; /* Neon green text */
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-transform: uppercase;
-        font-weight: bold;
-        text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00;
-        transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-        display: inline-block;
-        margin-top: 10px;
-    }
-
-    .neon-btn-back:hover {
-        background-color: #00FF00; /* Neon green background on hover */
-        color: #000; /* Black text on hover */
-        box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
-    }
+.glass-form-card input:focus,
+.glass-form-card textarea:focus {
+    border-color: var(--cyan-glow) !important;
+    box-shadow: 0 0 15px rgba(17, 217, 219, 0.35) !important;
+    outline: none !important;
+}
 </style>
 {% endblock %}
