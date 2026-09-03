@@ -18,7 +18,8 @@
 
         <!-- Minimal Search Box -->
         <div class="search-wrapper-minimal">
-            <form method="GET" action="{% url 'recommender' %}" id="search-form" class="w-100 d-flex align-items-center" onsubmit="handleFormSubmit(event)">
+            <form method="POST" action="{% url 'recommender' %}" id="search-form" class="w-100 d-flex align-items-center" onsubmit="handleFormSubmit(event)">
+                {% csrf_token %}
                 <i class="fas fa-search text-muted ms-3 me-2"></i>
                 <input list="movie-datalist" id="movie-input" name="query" class="search-input-field" 
                        placeholder="Type a movie title (e.g., Inception, Avatar, The Dark Knight)..." 
@@ -87,9 +88,9 @@
                             <a href="{% url 'review_create' %}?movie_name={{ movie.title|urlencode }}" class="btn-action-primary py-1 w-100 text-center text-decoration-none" style="font-size: 0.82rem;">
                                 Write Review
                             </a>
-                            <a href="{% url 'recommender' %}?query={{ movie.title|urlencode }}" class="text-muted small text-center text-decoration-none">
+                            <button onclick="quickSearch('{{ movie.title|escapejs }}')" class="btn btn-sm btn-light border text-muted rounded-3 py-1" style="font-size: 0.82rem;">
                                 Find similar &rarr;
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -118,9 +119,9 @@
                         </div>
                         <div class="movie-body-clean">
                             <h3 class="movie-title-clean text-truncate" title="{{ movie.title }}">{{ movie.title }}</h3>
-                            <a href="{% url 'recommender' %}?query={{ movie.title|urlencode }}" class="btn-action-secondary py-1 w-100 text-center text-decoration-none" style="font-size: 0.82rem;">
+                            <button onclick="quickSearch('{{ movie.title|escapejs }}')" class="btn-action-secondary py-1 w-100 text-center" style="font-size: 0.82rem;">
                                 Recommend
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -87,11 +87,13 @@ def recommend_view(request):
     - Interactive search input with autocomplete datalist
     - Top-5 cosine similarity recommendation cards with match scores
     - Quick category chips & similarity drill-down
+    - Accepts both GET and POST (POST hides query from URL for privacy)
     """
     rec_service = RecommendationService.get_instance()
     movie_list = rec_service.get_all_titles()
-    
-    query = request.GET.get('query', '').strip()
+
+    # Accept query from POST (hidden from URL) or GET fallback
+    query = (request.POST.get('query') or request.GET.get('query', '')).strip()
     recommendations = []
     selected_movie = query
     starter_movies = []
@@ -104,7 +106,7 @@ def recommend_view(request):
                 proxy_url = f"/review/poster-proxy/?path={poster_path}&title={r['title']}&movie_id={r['movie_id']}"
             else:
                 proxy_url = f"/review/poster-proxy/?title={r['title']}&movie_id={r['movie_id']}"
-            
+
             r['poster_url'] = proxy_url
             recommendations.append(r)
     else:
