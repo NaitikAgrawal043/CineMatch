@@ -1,30 +1,27 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block title %}CineMatch | {% if form.instance.pk %}Edit Review{% else %}Post Review{% endif %}{% endblock %}
+{% block title %}CineMatch — {% if form.instance.pk %}Edit Review{% else %}Write Review{% endif %}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-9">
+        <div class="col-lg-6 col-md-8">
 
-            <div class="glass-form-card p-4 p-md-5 bg-white border rounded-4 shadow-sm">
-                <div class="text-center mb-4">
-                    <span class="badge-hero-pill mb-2">
-                        <i class="fas fa-pen-nib me-1"></i> Community Critique
-                    </span>
-                    <h2 class="fw-bold text-dark mb-1">
-                        {% if form.instance.pk %}Edit Movie Review{% else %}Post a Movie Review{% endif %}
-                    </h2>
-                    <p class="text-secondary small mb-0">Share your cinema perspective with the community</p>
+            <div class="clean-card-box">
+                <div class="mb-4">
+                    <h1 class="h4 fw-bold text-dark mb-1">
+                        {% if form.instance.pk %}Edit Review{% else %}Write a Review{% endif %}
+                    </h1>
+                    <p class="text-muted small mb-0">Share your thoughts on a movie with the community</p>
                 </div>
 
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     {% for field in form %}
-                    <div class="mb-4">
-                        <label class="form-label text-dark fw-bold small mb-2" style="color: #0f172a !important;">
+                    <div class="mb-3">
+                        <label class="form-label text-dark fw-semibold small mb-1">
                             {{ field.label }}
                         </label>
                         {{ field }}
@@ -38,11 +35,11 @@
                     {% endfor %}
 
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn-neon-primary py-3 fs-5 justify-content-center">
-                            <i class="fas fa-paper-plane me-2"></i> Submit Review
+                        <button type="submit" class="btn-action-primary py-2 justify-content-center" style="font-size: 0.95rem;">
+                            Submit Review
                         </button>
-                        <a href="{% url 'review_list' %}" class="btn btn-light border text-secondary rounded-pill py-2 mt-1 fw-medium">
-                            <i class="fas fa-xmark me-1"></i> Cancel
+                        <a href="{% url 'review_list' %}" class="btn-action-secondary py-2 justify-content-center" style="font-size: 0.95rem;">
+                            Cancel
                         </a>
                     </div>
                 </form>
@@ -55,41 +52,34 @@
 
 {% block extra_css %}
 <style>
-/* Clean Light Inputs - No Dark Backgrounds */
-.glass-form-card input[type="text"],
-.glass-form-card input[type="email"],
-.glass-form-card input[type="password"],
-.glass-form-card input[type="file"],
-.glass-form-card textarea,
-.glass-form-card select {
-    background-color: #f8fafc !important;
-    border: 1.5px solid #cbd5e1 !important;
-    color: #0f172a !important;
-    border-radius: 12px !important;
-    padding: 0.85rem 1.15rem !important;
-    width: 100% !important;
-    font-size: 1rem !important;
-    font-family: inherit !important;
-    transition: all 0.2s ease !important;
-}
-
-.glass-form-card textarea {
-    min-height: 120px !important;
-    line-height: 1.6 !important;
-}
-
-.glass-form-card input:focus,
-.glass-form-card textarea:focus,
-.glass-form-card select:focus {
+.clean-card-box input[type="text"],
+.clean-card-box input[type="email"],
+.clean-card-box input[type="password"],
+.clean-card-box input[type="file"],
+.clean-card-box textarea,
+.clean-card-box select {
     background-color: #ffffff !important;
-    border-color: #f59e0b !important;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
-    outline: none !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    border-radius: 6px !important;
+    padding: 0.65rem 0.85rem !important;
+    width: 100% !important;
+    font-size: 0.95rem !important;
+    font-family: inherit !important;
+    transition: border-color 0.15s ease !important;
 }
 
-.glass-form-card input::placeholder,
-.glass-form-card textarea::placeholder {
-    color: #94a3b8 !important;
+.clean-card-box textarea {
+    min-height: 110px !important;
+    line-height: 1.55 !important;
+}
+
+.clean-card-box input:focus,
+.clean-card-box textarea:focus,
+.clean-card-box select:focus {
+    border-color: #111827 !important;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08) !important;
+    outline: none !important;
 }
 </style>
 {% endblock %}

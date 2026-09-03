@@ -1,30 +1,26 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block title %}CineMatch | Delete Review Confirmation{% endblock %}
+{% block title %}CineMatch — Delete Review{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
+        <div class="col-lg-5 col-md-7">
 
-            <div class="glass-form-card p-4 p-md-5 bg-white border rounded-4 shadow-sm text-center">
-                <div class="d-inline-flex p-3 rounded-circle mb-3" style="background: #fff1f2; border: 1.5px solid #fecdd3;">
-                    <i class="fas fa-trash-can display-6 text-danger"></i>
-                </div>
-                
-                <h3 class="fw-bold text-dark mb-2">Delete Review?</h3>
-                <p class="text-secondary mb-4">
-                    Are you sure you want to permanently delete your review for <strong>"{{ review.movie_name }}"</strong>? This action cannot be undone.
+            <div class="clean-card-box text-center">
+                <h1 class="h5 fw-bold text-dark mb-2">Delete Review?</h1>
+                <p class="text-secondary small mb-4">
+                    Are you sure you want to permanently delete your review for <strong>"{{ review.movie_name }}"</strong>?
                 </p>
 
-                <form method="POST" class="d-flex justify-content-center gap-3">
+                <form method="POST" class="d-flex justify-content-center gap-2">
                     {% csrf_token %}
-                    <a href="{% url 'review_list' %}" class="btn btn-light border text-secondary rounded-pill px-4 py-2 fw-medium">
-                        <i class="fas fa-arrow-left me-1"></i> Cancel
+                    <a href="{% url 'review_list' %}" class="btn-action-secondary py-2 px-4">
+                        Cancel
                     </a>
-                    <button class="btn btn-danger rounded-pill px-4 py-2 fw-semibold shadow-sm" type="submit">
-                        <i class="fas fa-trash me-1"></i> Confirm Delete
+                    <button class="btn btn-danger rounded-2 py-2 px-4 fw-medium border-0" type="submit" style="background-color: #dc2626;">
+                        Delete
                     </button>
                 </form>
             </div>

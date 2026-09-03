@@ -1,113 +1,94 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block title %}CineMatch | AI Review Sentiment Analyzer{% endblock %}
+{% block title %}CineMatch — Review Sentiment Analyzer{% endblock %}
 
 {% block content %}
 <div class="container py-4">
 
     <!-- Header -->
-    <div class="text-center py-4">
-        <span class="badge-hero-pill">
-            <i class="fas fa-brain me-1"></i> LSTM Deep Learning Neural Network
-        </span>
-        <h1 class="hero-title">
-            AI Movie Review <span class="gradient-text">Sentiment Analyzer</span>
+    <section class="hero-wrapper-clean pb-3">
+        <h1 class="hero-heading">
+            Sentiment Analyzer
         </h1>
-        <p class="hero-subtitle">
-            Enter or paste any movie review text below. Our 50,000-sample trained LSTM sequential neural network evaluates language sentiment and outputs confidence metrics in real time.
+        <p class="hero-subtext">
+            Enter or paste any movie review text to evaluate sentiment polarity with our LSTM neural network model.
         </p>
-    </div>
+    </section>
 
-    <!-- Input Card -->
+    <!-- Form Card -->
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="glass-form-card p-4 p-md-5 bg-white border rounded-4 shadow-sm mb-5">
+            <div class="clean-card-box mb-5">
                 <form method="POST" action="{% url 'sentiment_tool' %}" id="sentiment-form">
                     {% csrf_token %}
                     
                     <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <label for="review_text" class="form-label text-dark fw-bold mb-0 fs-5">
-                                <i class="fas fa-pen-fancy text-warning me-2"></i> Review Text
-                            </label>
-                            <span class="text-muted small">Type or click a sample below</span>
-                        </div>
-                        <textarea class="form-control form-control-custom" id="review_text" name="review_text" rows="4" 
-                                  placeholder="E.g., 'An absolute cinematic masterpiece with breathtaking visual effects and an outstanding performance by the lead actors!'" 
-                                  required style="font-size: 1.05rem; line-height: 1.6;">{{ review_text }}</textarea>
+                        <label for="review_text" class="form-label fw-semibold text-dark mb-2">
+                            Review text
+                        </label>
+                        <textarea class="clean-input" id="review_text" name="review_text" rows="4" 
+                                  placeholder="Type or paste a movie review here (e.g., 'An absolute cinematic masterpiece with outstanding acting and visuals!')..." 
+                                  required style="min-height: 110px;">{{ review_text }}</textarea>
                     </div>
 
                     <!-- Quick Sample Buttons -->
-                    <div class="d-flex gap-2 flex-wrap mb-4">
+                    <div class="chips-row-clean justify-content-start mb-4">
                         <span class="text-muted small my-auto">Try sample:</span>
-                        <button type="button" class="chip-btn-light" onclick="fillSample('The cinematography, acting, and musical score were phenomenal. One of the best films of the decade!')">
-                            <i class="fas fa-thumbs-up text-success me-1"></i> Positive Sample
+                        <button type="button" class="chip-clean" onclick="fillSample('The cinematography, acting, and musical score were phenomenal. One of the best films of the decade!')">
+                            Positive Review
                         </button>
-                        <button type="button" class="chip-btn-light" onclick="fillSample('Terrible screenplay, dull pacing, and completely unconvincing performances. A massive disappointment.')">
-                            <i class="fas fa-thumbs-down text-danger me-1"></i> Negative Sample
+                        <button type="button" class="chip-clean" onclick="fillSample('Terrible screenplay, dull pacing, and completely unconvincing performances. A massive disappointment.')">
+                            Negative Review
                         </button>
-                        <button type="button" class="chip-btn-light" onclick="fillSample('Visually stunning and ambitious in scope, though the third act felt slightly rushed.')">
-                            <i class="fas fa-scale-balanced text-primary me-1"></i> Nuanced Sample
+                        <button type="button" class="chip-clean" onclick="fillSample('Visually stunning and ambitious in scope, though the third act felt slightly rushed.')">
+                            Nuanced Review
                         </button>
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn-neon-primary py-3 fs-5 justify-content-center">
-                            <i class="fas fa-wand-magic-sparkles me-2"></i> Analyze Sentiment
+                        <button type="submit" class="btn-action-primary py-2 justify-content-center" style="font-size: 0.95rem;">
+                            Analyze Sentiment
                         </button>
                     </div>
                 </form>
 
-                <!-- Sentiment Prediction Result -->
+                <!-- Result Box -->
                 {% if result %}
-                <div class="mt-5 pt-4 border-top">
-                    <div class="text-center p-4 rounded-4" style="background: {% if result.sentiment == 'positive' %}#ecfdf5{% else %}#fff1f2{% endif %}; border: 2px solid {% if result.sentiment == 'positive' %}#10b981{% else %}#f43f5e{% endif %};">
+                <div class="mt-4 pt-4 border-top">
+                    <div class="p-4 rounded-3 border" style="background: {% if result.sentiment == 'positive' %}var(--sentiment-pos-bg){% else %}var(--sentiment-neg-bg){% endif %}; border-color: {% if result.sentiment == 'positive' %}var(--sentiment-pos-border){% else %}var(--sentiment-neg-border){% endif %};">
                         
-                        <div class="mb-3">
-                            {% if result.sentiment == 'positive' %}
-                                <div class="d-inline-flex p-3 rounded-circle mb-2" style="background: #d1fae5;">
-                                    <i class="fas fa-face-smile-beam display-4" style="color: #059669;"></i>
-                                </div>
-                                <h3 class="fw-bold text-success mb-1">
-                                    POSITIVE SENTIMENT
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="fw-bold text-uppercase small" style="color: {% if result.sentiment == 'positive' %}var(--sentiment-pos-text){% else %}var(--sentiment-neg-text){% endif %}; letter-spacing: 0.5px;">
+                                    Result
+                                </span>
+                                <h3 class="h5 fw-bold mb-0" style="color: {% if result.sentiment == 'positive' %}var(--sentiment-pos-text){% else %}var(--sentiment-neg-text){% endif %};">
+                                    {% if result.sentiment == 'positive' %}Positive Sentiment{% else %}Negative Sentiment{% endif %}
                                 </h3>
-                                <p class="text-secondary small mb-0">The review expresses enthusiasm, appreciation, and positive emotion.</p>
-                            {% else %}
-                                <div class="d-inline-flex p-3 rounded-circle mb-2" style="background: #ffe4e6;">
-                                    <i class="fas fa-face-frown display-4" style="color: #e11d48;"></i>
-                                </div>
-                                <h3 class="fw-bold text-danger mb-1">
-                                    NEGATIVE SENTIMENT
-                                </h3>
-                                <p class="text-secondary small mb-0">The review expresses criticism, dissatisfaction, or disappointment.</p>
-                            {% endif %}
+                            </div>
+                            <span class="badge bg-white border text-dark fs-6 px-3 py-2 fw-semibold">
+                                {{ result.confidence_percentage }}% Confidence
+                            </span>
                         </div>
 
-                        <!-- Confidence Meter -->
-                        <div class="my-3 p-3 bg-white rounded-3 border">
-                            <div class="d-flex justify-content-between text-secondary small mb-1 fw-bold">
-                                <span>MODEL CONFIDENCE</span>
-                                <span class="fs-6 text-dark">{{ result.confidence_percentage }}%</span>
-                            </div>
-                            <div class="progress" style="height: 12px; border-radius: 6px; background: #e2e8f0;">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" 
-                                     style="width: {{ result.confidence_percentage }}%; background-color: {% if result.sentiment == 'positive' %}#10b981{% else %}#f43f5e{% endif %};" 
-                                     aria-valuenow="{{ result.confidence_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
+                        <!-- Confidence Bar -->
+                        <div class="progress mb-3" style="height: 8px; background: rgba(0,0,0,0.06); border-radius: 4px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {{ result.confidence_percentage }}%; background-color: {% if result.sentiment == 'positive' %}#059669{% else %}#dc2626{% endif %};" 
+                                 aria-valuenow="{{ result.confidence_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
 
                         <!-- Evaluated Text -->
-                        <div class="p-3 bg-white rounded-3 border text-start">
-                            <span class="badge bg-light border text-dark mb-1">Evaluated Input Text:</span>
-                            <p class="text-dark mb-0 fst-italic" style="color: #1e293b !important; line-height: 1.6;">"{{ result.text }}"</p>
+                        <div class="p-3 bg-white rounded-3 border text-start mb-3">
+                            <p class="text-dark mb-0 fst-italic small" style="line-height: 1.6;">"{{ result.text }}"</p>
                         </div>
 
-                        <!-- Tech Specs -->
-                        <div class="mt-3 d-flex justify-content-around flex-wrap text-muted small">
-                            <span><i class="fas fa-microchip text-primary me-1"></i> Architecture: Sequential LSTM</span>
-                            <span><i class="fas fa-clock text-warning me-1"></i> Latency: &lt; 15 ms</span>
-                            <span><i class="fas fa-check-double text-success me-1"></i> Accuracy: 87.43%</span>
+                        <!-- Technical specs -->
+                        <div class="d-flex justify-content-between flex-wrap text-muted small">
+                            <span>Architecture: Sequential LSTM</span>
+                            <span>Latency: &lt; 15 ms</span>
+                            <span>Model Test Accuracy: 87.43%</span>
                         </div>
                     </div>
                 </div>

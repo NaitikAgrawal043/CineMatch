@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import pickle
 import json
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+
 
 from .models import Review
 from .forms import ReviewForm, UserRegistrationForm
@@ -25,6 +25,8 @@ def load_sentiment_model():
     model_path = os.path.join(settings.BASE_DIR, 'review/models/model.pkl')
     tokenizer_path = os.path.join(settings.BASE_DIR, 'review/models/tokenizer.pkl')
     try:
+        # Lazy import: defer TensorFlow load until first use to avoid blocking server startup
+        import tensorflow as tf  # noqa: F401
         with open(model_path, 'rb') as model_file:
             model = pickle.load(model_file)
         with open(tokenizer_path, 'rb') as token_file:
@@ -32,8 +34,6 @@ def load_sentiment_model():
         print("[SentimentService] LSTM model & tokenizer loaded successfully.")
     except Exception as e:
         print(f"[SentimentService] Error loading sentiment model: {e}")
-
-load_sentiment_model()
 
 # ==============================================================================
 # Landing Page vs. Recommender Views
@@ -171,26 +171,29 @@ def recommend_api(request):
 def poster_proxy(request):
     """
     Resilient Server-side CDN Poster Proxy:
-    - Fetches TMDB poster binaries with same-origin header safety
+    - Fetches TMDB poster binaries with same-origin header safety and local disk caching
     - Falls back to dynamic stylized Cinema SVG Poster on network error or missing artwork
     """
     path = request.GET.get('path', '').strip()
     title = request.GET.get('title', 'Movie Poster').strip()
     movie_id = request.GET.get('movie_id')
 
-    if not path and movie_id:
-        try:
-            path = get_poster_path(int(movie_id))
-        except:
-            path = None
-
-    if path:
-        binary_data, content_type = fetch_poster_binary(path)
+    # 1. Try fetching via path or movie_id from local disk cache / TMDB
+    if movie_id:
+        binary_data, content_type = fetch_poster_binary(path, movie_id=movie_id)
         if binary_data:
             response = HttpResponse(binary_data, content_type=content_type)
             response['Cache-Control'] = 'public, max-age=86400'
             return response
 
+    if path:
+        binary_data, content_type = fetch_poster_binary(path, movie_id=movie_id)
+        if binary_data:
+            response = HttpResponse(binary_data, content_type=content_type)
+            response['Cache-Control'] = 'public, max-age=86400'
+            return response
+
+    # 2. If no image found, generate stylized Cinema SVG Poster
     svg_data = generate_fallback_svg(title=title, movie_id=movie_id)
     response = HttpResponse(svg_data, content_type='image/svg+xml; charset=utf-8')
     response['Cache-Control'] = 'public, max-age=86400'
@@ -216,6 +219,7 @@ def sentiment_analyzer_view(request):
         try:
             load_sentiment_model()
             if tokenizer is not None and model is not None:
+                from tensorflow.keras.preprocessing.sequence import pad_sequences
                 sequence = tokenizer.texts_to_sequences([review_text])
                 padded_sequence = pad_sequences(sequence, maxlen=200)
                 sentiment_prediction = model.predict(padded_sequence)
@@ -300,6 +304,7 @@ def review_analyse(request, review_id):
         if tokenizer is None or model is None:
             return JsonResponse({'error': 'Sentiment model failed to initialize'}, status=500)
 
+        from tensorflow.keras.preprocessing.sequence import pad_sequences
         sequence = tokenizer.texts_to_sequences([review_text])
         padded_sequence = pad_sequences(sequence, maxlen=200)
         sentiment_prediction = model.predict(padded_sequence)

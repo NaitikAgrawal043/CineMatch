@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block title %}CineMatch | Community Reviews{% endblock %}
+{% block title %}CineMatch — Community Reviews{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -9,70 +9,60 @@
     <!-- Top Action & Search Bar -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <h2 class="fw-bold text-dark mb-1">
-                <i class="fas fa-comments text-info me-2"></i> Community Movie Reviews
-            </h2>
-            <p class="text-secondary small mb-0">Browse real-time cinema reviews and run AI sentiment evaluations</p>
+            <h1 class="h4 fw-bold text-dark mb-1">Community Reviews</h1>
+            <p class="text-muted small mb-0">Browse movie reviews and run sentiment classifications</p>
         </div>
         
         <div class="d-flex gap-2 flex-wrap">
             <form method="GET" action="{% url 'review_list' %}" class="d-flex gap-2">
-                <div class="input-group" style="max-width: 280px;">
-                    <input type="text" name="q" class="form-control form-control-custom" placeholder="Search by film title..." value="{{ request.GET.q }}">
-                    <button class="btn btn-neon-auth" type="submit">
+                <div class="input-group" style="max-width: 260px;">
+                    <input type="text" name="q" class="form-control clean-input" placeholder="Search by film title..." value="{{ request.GET.q }}">
+                    <button class="btn btn-action-primary" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
             </form>
-            <a class="btn-neon-primary" href="{% url 'review_create' %}">
-                <i class="fas fa-plus"></i> Write Review
+            <a class="btn-action-primary" href="{% url 'review_create' %}">
+                Write Review
             </a>
         </div>
     </div>
 
     <!-- Reviews Grid -->
     {% if reviews %}
-    <div class="row g-4">
+    <div class="row g-3">
         {% for review in reviews %}
         <div class="col-md-6 col-lg-4">
-            <div class="glass-form-card h-100 p-0 overflow-hidden d-flex flex-column justify-content-between">
+            <div class="review-card-clean {% cycle 'review-card-amber' 'review-card-blue' 'review-card-emerald' 'review-card-purple' %}">
                 {% if review.photo %}
-                <div style="height: 190px; overflow: hidden; background: #f1f5f9;">
+                <div style="height: 180px; overflow: hidden; background: #f3f4f6; border-radius: 6px;" class="mb-3">
                     <img src="{{ review.photo.url }}" class="w-100 h-100 object-fit-cover" alt="{{ review.movie_name }}">
                 </div>
                 {% endif %}
 
-                <div class="p-4 flex-grow-1 d-flex flex-column justify-content-between">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="fw-bold text-dark mb-0 fs-5">{{ review.movie_name }}</h5>
-                            <span class="badge bg-light border text-dark fw-semibold small">
-                                <i class="fas fa-user-circle text-primary me-1"></i> @{{ review.user.username }}
-                            </span>
-                        </div>
-                        <p class="text-dark mb-4 fw-normal" style="line-height: 1.6; font-size: 1rem; color: #1e293b !important;">
-                            "{{ review.text }}"
-                        </p>
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="text-truncate me-2" title="{{ review.movie_name }}">{{ review.movie_name }}</h4>
+                        <span class="review-tag">@{{ review.user.username }}</span>
                     </div>
+                    <p>"{{ review.text }}"</p>
+                </div>
 
-                    <!-- Card Actions -->
-                    <div class="pt-3 border-top border-light d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        {% if user.is_authenticated %}
-                        <a class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold" href="{% url 'review_analyse' review.id %}">
-                            <i class="fas fa-brain me-1"></i> Analyze Sentiment
+                <!-- Card Actions -->
+                <div class="pt-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <a class="btn-action-secondary py-1 px-3" href="{% url 'review_analyse' review.id %}" style="font-size: 0.82rem;">
+                        Analyze Sentiment
+                    </a>
+
+                    <div class="d-flex gap-2 ms-auto">
+                        {% if review.user == user %}
+                        <a class="btn btn-sm btn-light border text-secondary py-1 px-2" href="{% url 'review_edit' review.id %}" title="Edit Review">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a class="btn btn-sm btn-light border text-danger py-1 px-2" href="{% url 'review_delete' review.id %}" title="Delete Review">
+                            <i class="fas fa-trash-can"></i>
                         </a>
                         {% endif %}
-
-                        <div class="d-flex gap-2 ms-auto">
-                            {% if review.user == user %}
-                            <a class="btn btn-sm btn-light border text-secondary rounded-pill px-3" href="{% url 'review_edit' review.id %}" title="Edit Review">
-                                <i class="fas fa-pen"></i>
-                            </a>
-                            <a class="btn btn-sm btn-light border text-danger rounded-pill px-3" href="{% url 'review_delete' review.id %}" title="Delete Review">
-                                <i class="fas fa-trash-can"></i>
-                            </a>
-                            {% endif %}
-                        </div>
                     </div>
                 </div>
             </div>
@@ -80,12 +70,11 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="text-center my-5 p-5 glass-form-card">
-        <i class="fas fa-message text-muted fs-1 mb-3"></i>
-        <h3 class="text-dark fw-bold">No reviews found</h3>
-        <p class="text-secondary">Be the first to share your thoughts on a movie!</p>
-        <a href="{% url 'review_create' %}" class="btn-neon-primary mt-2">
-            <i class="fas fa-pen"></i> Write the First Review
+    <div class="text-center my-5 p-5 bg-light rounded-3 border">
+        <h3 class="h5 text-dark mb-1">No reviews found</h3>
+        <p class="text-muted small mb-3">Be the first to share your thoughts on a movie.</p>
+        <a href="{% url 'review_create' %}" class="btn-action-primary">
+            Write the First Review
         </a>
     </div>
     {% endif %}
